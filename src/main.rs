@@ -35,12 +35,12 @@ impl eframe::App for MyApp {
         ctx.set_debug_on_hover(true);
         egui::SidePanel::left("test")
             .default_width(150.)
-            .max_width(150.0)
-            .resizable(false)
+            .resizable(true)
             .show(ctx, |ui| {
                 TableBuilder::new(ui)
                     .cell_layout(Layout::left_to_right(Align::Center))
-                    .column(Size::remainder().at_most(150.0))
+                    .column(Size::remainder())
+                    .column(Size::exact(30.))
                     .striped(true)
                     .body(|body| {
                         body.rows(20., self.data.len(), |idx, mut row| {
@@ -48,16 +48,30 @@ impl eframe::App for MyApp {
                             row.col(|col| {
                                col.label(item);
                             });
+
+                            row.col(|col| {
+                                col.label("item");
+                            });
                         })
                     });
             });
 
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.add(egui::Slider::new(&mut self.cnt, 1..=200));
-            if ui.button("Add data").clicked() {
+            if ui.button("Add long text").clicked() {
                 for i in 0..self.cnt {
                     self.data.push(format!("Some long text will expand the grid and ignore the max_width and at_most option: {}", i));
                 }
+            }
+
+            if ui.button("Add short text").clicked() {
+                for i in 0..self.cnt {
+                    self.data.push(format!("Some text: {}", i));
+                }
+            }
+
+            if ui.button("Clear").clicked() {
+                self.data.clear();
             }
         });
     }
