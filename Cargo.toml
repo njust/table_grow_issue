@@ -8,3 +8,5 @@ edition = "2021"
 [dependencies]
 eframe = {git = "https://github.com/emilk/egui.git"}
 egui_extras = {git = "https://github.com/emilk/egui.git"}
+# eframe = "0.19.0"
+# egui_extras = "0.19.0"
