@@ -7,7 +7,7 @@ use eframe::{egui, Theme};
 use egui_extras::{Column, TableBuilder};
 fn main() {
     let options = eframe::NativeOptions {
-        default_theme: Theme::Light,
+        default_theme: Theme::Dark,
         initial_window_size: Some([800., 900.].into()),
         ..eframe::NativeOptions::default()
     };
@@ -27,14 +27,14 @@ impl Default for MyApp {
     fn default() -> Self {
         Self {
             cnt: 100,
-            data: vec![],
+            data: (0..100).enumerate().into_iter().map(|(idx, _)| format!("Some text: {}", idx)).collect(),
         }
     }
 }
 
 impl eframe::App for MyApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        ctx.set_debug_on_hover(true);
+        // ctx.set_debug_on_hover(true);
         egui::SidePanel::left("test")
             .default_width(150.)
             .resizable(true)
@@ -58,25 +58,26 @@ impl eframe::App for MyApp {
             });
 
         egui::CentralPanel::default().show(ctx, |ui| {
-            TableBuilder::new(ui)
-                .cell_layout(Layout::left_to_right(Align::Center))
-                .column(Column::auto().clip(true))
-                .column(Column::auto().clip(true))
-                .striped(true)
-                // .column(Size::relative(0.5))
-                // .column(Size::relative(0.5))
-                .body(|body| {
-                    body.rows(20., self.data.len(), |idx, mut row| {
-                        let item = self.data.get(idx).expect("Invalid idx");
-                        row.col(|col| {
-                            col.label(item);
-                        });
+            egui::ScrollArea::horizontal().show(ui, |ui| {
+                TableBuilder::new(ui)
+                    .cell_layout(Layout::left_to_right(Align::Center))
+                    .column(Column::initial(800.).clip(true))
+                    .column(Column::auto().clip(true))
+                    .max_scroll_height(f32::MAX)
+                    .striped(true)
+                    .body(|body| {
+                        body.rows(20., self.data.len(), |idx, mut row| {
+                            let item = self.data.get(idx).expect("Invalid idx");
+                            row.col(|col| {
+                                col.label(item);
+                            });
 
-                        row.col(|col| {
-                            col.label("item");
-                        });
-                    })
-                });
+                            row.col(|col| {
+                                col.label("item");
+                            });
+                        })
+                    });
+            });
         });
     }
 }
