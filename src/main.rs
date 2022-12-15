@@ -8,7 +8,7 @@ use egui_extras::{Column, TableBuilder};
 fn main() {
     let options = eframe::NativeOptions {
         default_theme: Theme::Dark,
-        initial_window_size: Some([800., 900.].into()),
+        initial_window_size: Some([800., 400.].into()),
         ..eframe::NativeOptions::default()
     };
     eframe::run_native(
@@ -64,6 +64,7 @@ impl eframe::App for MyApp {
                     .column(Column::initial(800.).clip(true))
                     .column(Column::auto().clip(true))
                     .max_scroll_height(f32::MAX)
+                    .auto_shrink([false;2])
                     .striped(true)
                     .body(|body| {
                         body.rows(20., self.data.len(), |idx, mut row| {
